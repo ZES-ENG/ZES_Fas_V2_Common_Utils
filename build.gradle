@@ -7,6 +7,9 @@ apply plugin: 'maven-publish'
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            groupId = 'com.github.ZES-ENG'
+            artifactId = 'library'
+            version = '1.0.0'
             from components.java
         }
     }
