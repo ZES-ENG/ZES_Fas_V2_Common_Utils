@@ -1,7 +1,9 @@
 jdk:
   - openjdk17
 
+before_install:
+  - export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+  - java -version
+
 install:
-  - sdk install java 17.0.8-tem
-  - sdk use java 17.0.8-tem
   - ./gradlew clean build -x test
