@@ -3,6 +3,8 @@ plugins {
     id 'maven-publish'
 }
 
+tasks.build.dependsOn publishToMavenLocal
+
 group = 'com.github.ZES-ENG'
 version = '1.0.0'
 
