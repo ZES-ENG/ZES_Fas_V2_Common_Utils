@@ -1,22 +1,27 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
 }
 
+apply plugin: 'maven-publish'
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.github.ZES-ENG'
+            artifactId 'fas_v2_common_utils'
+            version '1.0.0'
+            from components.java
+        }
+    }
+}
 group = 'com.github.ZES-ENG'
 version = '1.0.0'
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
 
 tasks.withType(Javadoc).configureEach {
     options.encoding = "UTF-8"  // ✅ 한글 인코딩 설정 추가
 }
 
 repositories {
-    mavenCentral()  // ✅ Maven Central이 반드시 포함되어 있어야 함
+    mavenCentral()  //
 }
 
 dependencies {
