@@ -1,0 +1,7 @@
+jdk:
+  - openjdk17
+
+install:
+  - sdk install java 17.0.8-tem
+  - sdk use java 17.0.8-tem
+  - ./gradlew clean build -x test
