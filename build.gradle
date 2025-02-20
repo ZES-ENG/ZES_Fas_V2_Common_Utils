@@ -19,7 +19,6 @@ repositories {
 dependencies {
     // Spring Boot Web 명확한 버전 추가
     implementation 'org.springframework.boot:spring-boot-starter-web:3.1.2'
-
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.2'
 
     // Lombok 명확한 버전 추가
@@ -38,9 +37,9 @@ test {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'com.github.ZES-ENG'
+            group = 'com.github.ZES-ENG'
             artifactId = 'ZES_Fas_V2_Common_Utils'
-            version = 'v1.0.0'
+            version = 'v1.0.1'
             from components.java
         }
     }
