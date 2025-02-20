@@ -1,26 +1,18 @@
 plugins {
-    id 'java-library'  // ✅ 라이브러리 모듈로 설정
-    id 'maven-publish' // ✅ JitPack 배포를 위한 플러그인
+    id 'java-library'
+    id 'maven-publish'
 }
 
 group = 'com.github.ZES-ENG'
 version = '1.0.0'
 
-java { // ✅ 여기에 추가
+java {
     withJavadocJar()
     withSourcesJar()
 }
 
 tasks.withType(Javadoc).configureEach {
     options.encoding = "UTF-8"  // ✅ 한글 인코딩 설정 추가
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
 }
 
 repositories {
