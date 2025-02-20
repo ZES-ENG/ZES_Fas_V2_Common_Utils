@@ -3,18 +3,6 @@ plugins {
     id 'maven-publish'
 }
 
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = 'com.github.ZES-ENG'
-            artifactId = 'ZES_Fas_V2_Common_Utils'
-            version = 'v1.0.0'
-            from components.java
-        }
-    }
-}
-
 group = 'com.github.ZES-ENG'
 version = '1.0.0'
 
@@ -43,4 +31,15 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'com.github.ZES-ENG'
+            artifactId = 'ZES_Fas_V2_Common_Utils'
+            version = 'v1.0.0'
+            from components.java
+        }
+    }
 }
