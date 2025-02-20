@@ -3,12 +3,19 @@ plugins {
     id 'maven-publish' // ✅ JitPack 배포를 위한 플러그인
 }
 
-group = 'com.zes'
+group = 'com.github.ZES-ENG'
 version = '1.0.0'
 
 java { // ✅ 여기에 추가
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17)) // Java 17 사용
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
     }
 }
 
