@@ -3,16 +3,15 @@ plugins {
 }
 
 apply plugin: 'maven-publish'
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId 'com.github.ZES-ENG'
-            artifactId 'fas_v2_common_utils'
-            version '1.0.0'
             from components.java
         }
     }
 }
+
 group = 'com.github.ZES-ENG'
 version = '1.0.0'
 
