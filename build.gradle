@@ -11,6 +11,10 @@ java { // ✅ 여기에 추가
     withSourcesJar()
 }
 
+tasks.withType(Javadoc).configureEach {
+    options.encoding = "UTF-8"  // ✅ 한글 인코딩 설정 추가
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
