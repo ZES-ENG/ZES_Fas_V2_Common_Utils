@@ -1,5 +1,7 @@
 package com.zes.common.response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zes.common.util.AppConstants;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,8 @@ public class ApiResponse<T> {
     private String message;
     private T data;
     private HttpStatus status;
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     // 기본 생성자
     public ApiResponse(T data) {
@@ -55,5 +59,14 @@ public class ApiResponse<T> {
 
     public static <T> Mono<ApiResponse<T>> toMonoOk(T data) {
         return toMono(HttpStatus.OK, AppConstants.SUCCESS.getValue(), data);
+    }
+
+    // JSON 문자열로 변환하는 메서드 추가
+    public String toJsonString() {
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return "{\"message\":\"JSON 변환 오류\", \"status\":\"INTERNAL_SERVER_ERROR\"}";
+        }
     }
 }
