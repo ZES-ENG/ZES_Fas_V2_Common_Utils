@@ -4,6 +4,7 @@ import com.zes.common.util.AppConstants;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
 
 @Data
 public class ApiResponse<T> {
@@ -25,12 +26,11 @@ public class ApiResponse<T> {
         this.status = status;
     }
 
-    // 상태 코드와 메시지, 데이터 설정 팩토리 메서드
+    // ✅ 서블릿 기반(Spring MVC)에서 사용할 응답 생성
     public static <T> ApiResponse<T> of(HttpStatus status, String message, T data) {
         return new ApiResponse<>(status, message, data);
     }
 
-    // 상태 코드만 지정하고 데이터 설정 팩토리 메서드
     public static <T> ApiResponse<T> of(HttpStatus status, T data) {
         return new ApiResponse<>(status, status.name(), data);
     }
@@ -38,13 +38,22 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> ok() {
         return ApiResponse.ok(null);
     }
-    // OK 응답을 반환하는 메서드
+
     public static <T> ApiResponse<T> ok(T data) {
-        return ApiResponse.of(HttpStatus.OK, HttpStatus.OK.name(), data);
+        return ApiResponse.of(HttpStatus.OK, AppConstants.SUCCESS.getValue(), data);
     }
 
-    // ResponseEntity로 반환하는 메서드
+    // ✅ ResponseEntity로 변환 (서블릿 기반에서 사용)
     public ResponseEntity<ApiResponse<T>> toResponseEntity() {
         return ResponseEntity.status(this.status).body(this);
+    }
+
+    // ✅ WebFlux용 응답을 생성하는 팩토리 메서드 (WebFlux 환경에서 사용)
+    public static <T> Mono<ApiResponse<T>> toMono(HttpStatus status, String message, T data) {
+        return Mono.just(new ApiResponse<>(status, message, data));
+    }
+
+    public static <T> Mono<ApiResponse<T>> toMonoOk(T data) {
+        return toMono(HttpStatus.OK, AppConstants.SUCCESS.getValue(), data);
     }
 }
