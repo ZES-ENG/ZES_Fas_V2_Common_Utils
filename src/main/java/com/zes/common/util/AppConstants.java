@@ -11,7 +11,7 @@ public enum AppConstants {
     SUCCESS("success"),
 
     // 에러 메시지 상수들
-    ERROR_SERVER_ERROR("SERVER_ERROR"),
+    ERROR_SERVER_ERROR("SERVER ERROR"),
     ERROR_NOT_FOUND("사용자를 찾을 수가 없습니다."),
     ERROR_DUPLICATE_ID("아이디가 중복 되었습니다."),
     ERROR_INVALID_CREDENTIALS("해당 데이터가 존재하지 않습니다."),
