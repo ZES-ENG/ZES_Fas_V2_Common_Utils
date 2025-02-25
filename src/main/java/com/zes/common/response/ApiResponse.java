@@ -43,12 +43,12 @@ public class ApiResponse<T> {
         return ApiResponse.of(HttpStatus.OK, AppConstants.SUCCESS.getValue(), data);
     }
 
-    // ✅ ResponseEntity로 변환 (서블릿 기반에서 사용)
+    // ResponseEntity로 변환 (서블릿 기반에서 사용)
     public ResponseEntity<ApiResponse<T>> toResponseEntity() {
         return ResponseEntity.status(this.status).body(this);
     }
 
-    // ✅ WebFlux용 응답을 생성하는 팩토리 메서드 (WebFlux 환경에서 사용)
+    // WebFlux용 응답을 생성하는 팩토리 메서드 (WebFlux 환경에서 사용)
     public static <T> Mono<ApiResponse<T>> toMono(HttpStatus status, String message, T data) {
         return Mono.just(new ApiResponse<>(status, message, data));
     }
