@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 public class ApiResponse<T> {
     private String message;
     private T data;
-    private HttpStatus status;
+    private int status;
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -20,23 +20,23 @@ public class ApiResponse<T> {
     public ApiResponse(T data) {
         this.message = AppConstants.SUCCESS.getValue();
         this.data = data;
-        this.status = HttpStatus.OK;
+        this.status = HttpStatus.OK.value();
     }
 
     // 상태 코드와 메시지, 데이터 설정 생성자
-    public ApiResponse(HttpStatus status, String message, T data) {
+    public ApiResponse(int status, String message, T data) {
         this.message = message;
         this.data = data;
         this.status = status;
     }
 
     // ✅ 서블릿 기반(Spring MVC)에서 사용할 응답 생성
-    public static <T> ApiResponse<T> of(HttpStatus status, String message, T data) {
+    public static <T> ApiResponse<T> of(int status, String message, T data) {
         return new ApiResponse<>(status, message, data);
     }
 
     public static <T> ApiResponse<T> of(HttpStatus status, T data) {
-        return new ApiResponse<>(status, status.name(), data);
+        return new ApiResponse<>(status.value(), status.name(), data);
     }
 
     public static <T> ApiResponse<T> ok() {
@@ -44,7 +44,7 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> ok(T data) {
-        return ApiResponse.of(HttpStatus.OK, AppConstants.SUCCESS.getValue(), data);
+        return ApiResponse.of(HttpStatus.OK.value(), AppConstants.SUCCESS.getValue(), data);
     }
 
     // ResponseEntity로 변환 (서블릿 기반에서 사용)
@@ -53,12 +53,12 @@ public class ApiResponse<T> {
     }
 
     // WebFlux용 응답을 생성하는 팩토리 메서드 (WebFlux 환경에서 사용)
-    public static <T> Mono<ApiResponse<T>> toMono(HttpStatus status, String message, T data) {
+    public static <T> Mono<ApiResponse<T>> toMono(int status, String message, T data) {
         return Mono.just(new ApiResponse<>(status, message, data));
     }
 
     public static <T> Mono<ApiResponse<T>> toMonoOk(T data) {
-        return toMono(HttpStatus.OK, AppConstants.SUCCESS.getValue(), data);
+        return toMono(HttpStatus.OK.value(), AppConstants.SUCCESS.getValue(), data);
     }
 
     // JSON 문자열로 변환하는 메서드 추가

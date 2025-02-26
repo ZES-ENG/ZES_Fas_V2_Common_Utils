@@ -17,7 +17,7 @@ public class AppExceptionHandler {
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ApiResponse<Void>> handleAppException(AppException ex) {
         // AppException에서 상태 코드와 메시지를 추출하여 ApiResponse 반환
-        ApiResponse<Void> apiResponse = new ApiResponse<>(ex.getStatus(), ex.getMessage(), null);
+        ApiResponse<Void> apiResponse = new ApiResponse<>(ex.getStatus().value(), ex.getMessage(), null);
         return apiResponse.toResponseEntity();
     }
 
@@ -25,7 +25,7 @@ public class AppExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException ex) {
         // GENERAL ERROR로 INTERNAL_SERVER_ERROR 상태 코드 설정
-        ApiResponse<Void> apiResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null);
+        ApiResponse<Void> apiResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), null);
         return apiResponse.toResponseEntity();
     }
 
@@ -38,7 +38,7 @@ public class AppExceptionHandler {
                 .findFirst()
                 .orElse("Validation error");
 
-        ApiResponse<Void> apiResponse = new ApiResponse<>(HttpStatus.BAD_REQUEST, firstViolationMessage, null);
+        ApiResponse<Void> apiResponse = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), firstViolationMessage, null);
         return apiResponse.toResponseEntity();
     }
 
@@ -53,7 +53,7 @@ public class AppExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .orElse("Validation error");
 
-        ApiResponse<Void> apiResponse = new ApiResponse<>(HttpStatus.BAD_REQUEST, firstErrorMessage, null);
+        ApiResponse<Void> apiResponse = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), firstErrorMessage, null);
         return apiResponse.toResponseEntity();
     }
 }
