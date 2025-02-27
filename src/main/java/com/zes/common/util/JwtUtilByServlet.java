@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.util.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@ConditionalOnClass(HttpServletRequest.class)
 public class JwtUtilByServlet {
 
     public String getTokenFromCookie(HttpServletRequest request, String cookieName) {
