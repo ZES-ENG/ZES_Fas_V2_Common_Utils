@@ -68,8 +68,7 @@ public class JwtUtil {
     public String generateAccessToken(long userId, long companyId, long expirationTime) {
         log.info("Generating access token for userPk: {}", userId);
         String token = createToken(userId, companyId, expirationTime);
-//        return encodeToken(token);
-        return token; // 여기서 Bearer 붙이기
+        return token;
     }
 
     private String encodeToken(String token) {
@@ -108,44 +107,12 @@ public class JwtUtil {
         return username;
     }
 
-    public String extractToken(String token) {
-
-        if (token != null && token.startsWith("Bearer ")) {
-            return token.substring(7); // "Bearer " 제거하고 토큰만 리턴
-        }
-
-        throw new IllegalArgumentException("Invalid or missing Authorization header");
-    }
-
     public Claims extractClaims(String token) {
-        System.out.println("token: " + token);
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey()) // 서명 검증
                 .build()
                 .parseClaimsJws(token) // 토큰 해석
                 .getBody(); // Claims(페이로드) 가져오기
-    }
-
-    public Claims getClaimsFromToken(String token) {
-        return this.extractClaims(this.extractToken(token));
-    }
-
-    public String getTokenFromCookie(HttpServletRequest request, String cookieName) {
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(cookieName)) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
-    public Optional<String> getTokenFromCookieByWebflux(ServerHttpRequest request, String cookieName) {
-        return Optional.ofNullable(request.getCookies().getFirst(cookieName))
-                .map(HttpCookie::getValue);
     }
 
 }
