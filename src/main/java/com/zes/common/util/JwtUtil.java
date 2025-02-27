@@ -4,18 +4,19 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpCookie;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SignatureException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -41,7 +42,7 @@ public class JwtUtil {
         claims.put("companyId", companyId);
 
         return Jwts.builder()
-                .setHeaderParam("type", "JWT") // 헤더
+                .setHeaderParam("typ", "JWT") // 헤더
                 .setIssuer("ZESTECH_FAS_V2") // 발급자
                 .setClaims(claims)
                 .setIssuedAt(now) // 발급 시간
@@ -128,4 +129,23 @@ public class JwtUtil {
     public Claims getClaimsFromToken(String token) {
         return this.extractClaims(this.extractToken(token));
     }
+
+    private String getTokenFromCookie(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    public Optional<String> getTokenFromCookie(ServerHttpRequest request, String cookieName) {
+        return Optional.ofNullable(request.getCookies().getFirst(cookieName))
+                .map(HttpCookie::getValue);
+    }
+
 }
