@@ -130,7 +130,7 @@ public class JwtUtil {
         return this.extractClaims(this.extractToken(token));
     }
 
-    private String getTokenFromCookie(HttpServletRequest request, String cookieName) {
+    public String getTokenFromCookie(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
@@ -143,7 +143,7 @@ public class JwtUtil {
         return null;
     }
 
-    public Optional<String> getTokenFromCookie(ServerHttpRequest request, String cookieName) {
+    public Optional<String> getTokenFromCookieByWebflux(ServerHttpRequest request, String cookieName) {
         return Optional.ofNullable(request.getCookies().getFirst(cookieName))
                 .map(HttpCookie::getValue);
     }
