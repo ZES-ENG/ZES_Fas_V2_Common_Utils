@@ -23,21 +23,17 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
-
     // Access 토큰 생성
-    private SecretKey getSigningKey() {
-        System.out.println("jwt.secret-key: " + secretKey);
+    private SecretKey getSigningKey(String secretKey) {
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private String createToken(long userId, long companyId, long expirationTime) {
+    private String createToken(long userId, long companyId, String secretKey, long expirationTime) {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         Date expireDate = new Date(nowMillis + expirationTime);
-        SecretKey signingKey = getSigningKey();
+        SecretKey signingKey = getSigningKey(secretKey);
         Map<String,Long> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("companyId", companyId);
@@ -52,23 +48,23 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Claims parseToken(String token) {
+    public Claims parseToken(String token, String secretKey) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(getSigningKey(secretKey))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public boolean isTokenExpired(String token) {
-        Claims claims = parseToken(token);
+    public boolean isTokenExpired(String token, String secretKey) {
+        Claims claims = parseToken(token, secretKey);
         Date expirationDate = claims.getExpiration(); // `exp` 클레임 가져오기
         return expirationDate.before(new Date()); // 현재 시간과 비교하여 만료 여부 확인
     }
 
-    public String generateAccessToken(long userId, long companyId, long expirationTime) {
+    public String generateAccessToken(long userId, long companyId, String secretKey, long expirationTime) {
         log.info("Generating access token for userPk: {}", userId);
-        String token = createToken(userId, companyId, expirationTime);
+        String token = createToken(userId, companyId, secretKey, expirationTime);
         return token;
     }
 
@@ -81,7 +77,7 @@ public class JwtUtil {
         }
     }
 
-    public Claims validateToken(String token) throws SignatureException {
+    public Claims validateToken(String token, String secretKey) throws SignatureException {
         if (token == null || !token.startsWith("Bearer ")) {
             log.error("Invalid token format: {}", token);
             throw new SignatureException("Invalid token");
@@ -92,7 +88,7 @@ public class JwtUtil {
 
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
+                    .setSigningKey(getSigningKey(secretKey))
                     .build()
                     .parseClaimsJws(parsedToken)
                     .getBody();
@@ -108,9 +104,9 @@ public class JwtUtil {
         return username;
     }
 
-    public Claims extractClaims(String token) {
+    public Claims extractClaims(String token, String secretKey) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey()) // 서명 검증
+                .setSigningKey(getSigningKey(secretKey)) // 서명 검증
                 .build()
                 .parseClaimsJws(token) // 토큰 해석
                 .getBody(); // Claims(페이로드) 가져오기
