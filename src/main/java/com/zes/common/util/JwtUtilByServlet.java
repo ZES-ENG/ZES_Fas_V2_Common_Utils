@@ -38,6 +38,4 @@ public class JwtUtilByServlet {
         }
         return null;
     }
-
-
 }

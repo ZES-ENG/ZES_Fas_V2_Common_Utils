@@ -28,6 +28,7 @@ public class JwtUtil {
 
     // Access 토큰 생성
     private SecretKey getSigningKey() {
+        System.out.println("jwt.secret-key: " + secretKey);
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
