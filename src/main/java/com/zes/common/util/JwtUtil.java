@@ -40,6 +40,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT") // 헤더
+                .setSubject(Long.toString(userId))
                 .setIssuer("ZESTECH_FAS_V2") // 발급자
                 .setClaims(claims)
                 .setIssuedAt(now) // 발급 시간
